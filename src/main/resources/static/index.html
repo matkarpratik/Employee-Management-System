@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EMS | Employee Management System</title>
+
+<style>
+:root {
+    --primary: #2878e8;
+    --primary-dark: #1763ca;
+    --sidebar: #17263b;
+    --background: #f5f7fb;
+    --border: #e4eaf2;
+    --text: #25354d;
+    --muted: #7b8798;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    font-size: 14px;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* APP LAYOUT */
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 245px;
+    min-width: 245px;
+    background: var(--sidebar);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    height: 82px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.brand-icon {
+    font-size: 30px;
+    color: #60a5fa;
+}
+
+.brand-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+
+.brand-subtitle {
+    color: #b8c5d6;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.nav {
+    padding: 22px 12px;
+}
+
+.nav-label {
+    color: #8fa1b9;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin: 0 12px 15px;
+}
+
+.nav-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 14px;
+    margin-bottom: 6px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #d4deeb;
+    font-size: 13px;
+    transition: background .2s;
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,.08);
+}
+
+.nav-item.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 22px;
+    border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.online-indicator {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+}
+
+.online-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #4ade80;
+}
+
+.database-status {
+    color: #aebdd0;
+    font-size: 11px;
+    margin: 9px 0 0 18px;
+}
+
+/* MAIN */
+
+.main {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    height: 55px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+}
+
+.menu-button {
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 22px;
+}
+
+.admin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.admin-avatar {
+    height: 30px;
+    width: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #e7edf6;
+    color: #344c6c;
+    font-size: 17px;
+}
+
+.content {
+    padding: 24px;
+}
+
+.page-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.page-heading h1 {
+    font-size: 25px;
+    font-weight: 650;
+    color: #192d49;
+    margin-bottom: 6px;
+}
+
+.page-heading p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.page-date {
+    color: #52647c;
+    text-align: right;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* COMMON */
+
+.section-title {
+    font-size: 15px;
+    font-weight: 650;
+    color: #263a56;
+    margin-bottom: 15px;
+}
+
+.panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    min-width: 0;
+}
+
+.panel-heading {
+    padding: 15px 17px;
+    border-bottom: 1px solid var(--border);
+}
+
+.panel-heading h2 {
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.panel-body {
+    padding: 17px;
+}
+
+/* SUMMARY CARDS */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 17px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.summary-icon {
+    width: 47px;
+    height: 47px;
+    min-width: 47px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+}
+
+.icon-blue {
+    color: #2878e8;
+    background: #e5efff;
+}
+
+.icon-green {
+    color: #279f71;
+    background: #dff5eb;
+}
+
+.icon-orange {
+    color: #e9a01c;
+    background: #fff0cc;
+}
+
+.icon-purple {
+    color: #7957d5;
+    background: #eee7ff;
+}
+
+.summary-label {
+    color: #697991;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1b304e;
+    overflow-wrap: anywhere;
+}
+
+.summary-note {
+    font-size: 10px;
+    color: #7c8a9e;
+    margin-top: 9px;
+}
+
+/* DASHBOARD COLUMNS */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* DEPARTMENT BAR CHART */
+
+.chart {
+    padding: 18px 18px 14px;
+    min-height: 215px;
+}
+
+.chart-plot {
+    height: 165px;
+    display: flex;
+    border-bottom: 1px solid #dce4ef;
+    position: relative;
+    padding-left: 27px;
+}
+
+.chart-y-labels {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #718199;
+    font-size: 10px;
+    padding-bottom: 0;
+}
+
+.chart-grid-lines {
+    position: absolute;
+    inset: 0 0 0 27px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.chart-grid-lines span {
+    border-top: 1px solid #edf1f6;
+    width: 100%;
+}
+
+.chart-bars {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+}
+
+.bar-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+}
+
+.bar-value {
+    font-size: 10px;
+    color: #425a79;
+    margin-bottom: 6px;
+}
+
+.bar {
+    width: 52%;
+    max-width: 58px;
+    min-height: 0;
+    border-radius: 2px 2px 0 0;
+}
+
+.bar-label {
+    height: 23px;
+    padding-top: 8px;
+    font-size: 10px;
+    color: #526680;
+    white-space: nowrap;
+}
+
+.bar-blue { background: #357fe4; }
+.bar-green { background: #45b67b; }
+.bar-orange { background: #f49a38; }
+.bar-purple { background: #8756d8; }
+.bar-teal { background: #26b5c4; }
+
+/* SALARY STATISTICS */
+
+.salary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.salary-stat {
+    padding: 5px 14px;
+    border-right: 1px solid var(--border);
+    min-width: 0;
+}
+
+.salary-stat:last-child {
+    border-right: none;
+}
+
+.salary-stat-label {
+    color: #708098;
+    font-size: 10px;
+    margin-bottom: 8px;
+}
+
+.salary-stat-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: #263b58;
+    overflow-wrap: anywhere;
+}
+
+/* DEPARTMENT OVERVIEW */
+
+.department-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 42px;
+    padding: 10px 17px;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.department-row:last-child {
+    border-bottom: none;
+}
+
+.department-icon {
+    width: 24px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.department-name {
+    flex: 1;
+    font-size: 12px;
+    color: #52647c;
+}
+
+.department-count {
+    font-size: 12px;
+    color: #344b6c;
+}
+
+.department-arrow {
+    color: #8796aa;
+    font-size: 17px;
+}
+
+/* EMPLOYEE DIRECTORY */
+
+.directory {
+    margin-top: 14px;
+}
+
+.directory-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 17px;
+    border-bottom: 1px solid var(--border);
+}
+
+.directory-toolbar h2 {
+    font-size: 15px;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    width: 270px;
+    max-width: 100%;
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid #d8e1ed;
+    border-radius: 5px;
+    outline: none;
+    font-size: 11px;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+}
+
+.button {
+    border: none;
+    border-radius: 5px;
+    height: 34px;
+    padding: 0 14px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.button-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.button-primary:hover {
+    background: var(--primary-dark);
+}
+
+.button:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+th {
+    padding: 12px;
+    color: #687b95;
+    font-size: 10px;
+    font-weight: 650;
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 10px 12px;
+    color: #455973;
+    font-size: 11px;
+    border-bottom: 1px solid #edf1f6;
+}
+
+tbody tr:hover {
+    background: #f8faff;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.employee-id {
+    color: #687b95;
+}
+
+.employee-email {
+    color: #536d91;
+}
+
+.department-badge {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.badge-it {
+    color: #2878e8;
+    background: #e4efff;
+}
+
+.badge-hr {
+    color: #23976a;
+    background: #def5e9;
+}
+
+.badge-finance {
+    color: #b86a0a;
+    background: #fff0d9;
+}
+
+.badge-marketing {
+    color: #7951c8;
+    background: #eee6ff;
+}
+
+.badge-sales {
+    color: #168d9b;
+    background: #dcf5f7;
+}
+
+.badge-default {
+    color: #52647c;
+    background: #edf1f6;
+}
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 17px;
+    color: #687b95;
+    font-size: 10px;
+}
+
+.pagination {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.page-button {
+    min-width: 26px;
+    height: 26px;
+    padding: 0 7px;
+    background: white;
+    color: #52647c;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.page-button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.empty-message {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+}
+
+.footer {
+    padding: 22px 0 5px;
+    text-align: center;
+    font-size: 10px;
+    color: #8b98a9;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 210px;
+        min-width: 210px;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 180px;
+        min-width: 180px;
+    }
+
+    .content {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 650px) {
+    .sidebar {
+        display: none;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .page-heading h1 {
+        font-size: 22px;
+    }
+
+    .page-date {
+        display: none;
+    }
+
+    .content {
+        padding: 12px;
+    }
+
+    .summary-card {
+        padding: 12px;
+        gap: 9px;
+    }
+
+    .summary-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 18px;
+    }
+
+    .summary-value {
+        font-size: 19px;
+    }
+
+    .directory-toolbar {
+        align-items: stretch;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+    }
+
+    .search-input {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .salary-stat {
+        padding: 5px 8px;
+    }
+
+    .salary-stat-value {
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">▣</div>
+
+            <div>
+                <div class="brand-name">EMS</div>
+                <div class="brand-subtitle">
+                    Employee Management System
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav">
+
+            <div class="nav-label">MAIN MENU</div>
+
+            <a href="#dashboard" class="nav-item active">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="#directory" class="nav-item">
+                <span class="nav-icon">♙</span>
+                Employees
+            </a>
+
+            <a href="#departments" class="nav-item">
+                <span class="nav-icon">▦</span>
+                Departments
+            </a>
+
+            <a href="#analytics" class="nav-item">
+                <span class="nav-icon">▥</span>
+                Analytics
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="online-indicator">
+                <span class="online-dot"></span>
+                <span>System Online</span>
+            </div>
+
+            <div class="database-status">
+                Database Connected
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <button class="menu-button" aria-label="Menu">
+                ☰
+            </button>
+
+            <div class="admin">
+                <div class="admin-avatar">♙</div>
+                <span>Admin</span>
+                <span>⌄</span>
+            </div>
+
+        </header>
+
+        <div class="content" id="dashboard">
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-heading">
+
+                <div>
+                    <h1>Dashboard</h1>
+
+                    <p>
+                        Welcome to Employee Management System
+                    </p>
+                </div>
+
+                <div class="page-date">
+                    <div id="currentDate"></div>
+                    <div id="currentTime"></div>
+                </div>
+
+            </div>
+
+            <!-- SUMMARY CARDS -->
+
+            <section class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="summary-icon icon-blue">♟</div>
+
+                    <div>
+                        <div class="summary-label">
+                            Total Employees
+                        </div>
+
+                        <div class="summary-value"
+                             id="totalEmployees">0</div>
+
+                        <div class="summary-note">
+                            Employee records
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-icon icon-green">▦</div>
+
+                    <div>
+                        <div class="summary-label">
+                            Departments
+                        </div>
+
+                        <div class="summary-value"
+                             id="totalDepartments">0</div>
+
+                        <div class="summary-note">
+                            Active departments
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-icon icon-orange">₹</div>
+
+                    <div>
+                        <div class="summary-label">
+                            Average Salary
+                        </div>
+
+                        <div class="summary-value"
+                             id="averageSalary">₹0</div>
+
+                        <div class="summary-note">
+                            Average monthly salary
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-icon icon-purple">♙+</div>
+
+                    <div>
+                        <div class="summary-label">
+                            New Hires
+                        </div>
+
+                        <div class="summary-value"
+                             id="newHires">0</div>
+
+                        <div class="summary-note">
+                            Joined this month
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ANALYTICS -->
+
+            <section class="dashboard-grid" id="analytics">
+
+                <div class="left-column">
+
+                    <!-- DEPARTMENT CHART -->
+
+                    <div class="panel">
+
+                        <div class="panel-heading">
+                            <h2>Employees by Department</h2>
+                        </div>
+
+                        <div class="chart">
+
+                            <div class="chart-plot">
+
+                                <div class="chart-y-labels"
+                                     id="chartYAxis">
+                                </div>
+
+                                <div class="chart-grid-lines">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                <div class="chart-bars"
+                                     id="departmentChart">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- SALARY STATISTICS -->
+
+                    <div class="panel">
+
+                        <div class="panel-heading">
+                            <h2>Salary Statistics</h2>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="salary-grid">
+
+                                <div class="salary-stat">
+
+                                    <div class="salary-stat-label">
+                                        Highest Salary
+                                    </div>
+
+                                    <div class="salary-stat-value"
+                                         id="highestSalary">₹0</div>
+
+                                </div>
+
+                                <div class="salary-stat">
+
+                                    <div class="salary-stat-label">
+                                        Lowest Salary
+                                    </div>
+
+                                    <div class="salary-stat-value"
+                                         id="lowestSalary">₹0</div>
+
+                                </div>
+
+                                <div class="salary-stat">
+
+                                    <div class="salary-stat-label">
+                                        Average Salary
+                                    </div>
+
+                                    <div class="salary-stat-value"
+                                         id="salaryAverage">₹0</div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DEPARTMENT OVERVIEW -->
+
+                <div class="panel" id="departments">
+
+                    <div class="panel-heading">
+                        <h2>Department Overview</h2>
+                    </div>
+
+                    <div id="departmentOverview">
+                        <div class="empty-message">
+                            Loading departments...
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- EMPLOYEE DIRECTORY -->
+
+            <section class="panel directory" id="directory">
+
+                <div class="directory-toolbar">
+
+                    <h2>Employee Directory</h2>
+
+                    <div class="toolbar-actions">
+
+                        <input
+                            type="search"
+                            class="search-input"
+                            id="searchInput"
+                            placeholder="Search by name, email, department..."
+                            aria-label="Search employees"
+                        >
+
+                        <button
+                            class="button button-primary"
+                            id="refreshButton">
+                            ↻ &nbsp; Refresh
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="table-scroll">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Salary</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="employeeTable">
+
+                            <tr>
+                                <td colspan="6" class="empty-message">
+                                    Loading employee records...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="table-footer">
+
+                    <span id="tableFooter">
+                        Loading records...
+                    </span>
+
+                    <div class="pagination" id="pagination"></div>
+
+                </div>
+
+            </section>
+
+            <footer class="footer">
+                Employee Management System
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+const API_URL = "/api/employees";
+
+let employees = [];
+let currentPage = 1;
+
+const pageSize = 8;
+
+const departmentIcons = {
+    "IT": "▣",
+    "HR": "♟",
+    "Finance": "▤",
+    "Marketing": "⚑",
+    "Sales": "⇄"
+};
+
+const chartColors = [
+    "bar-blue",
+    "bar-green",
+    "bar-orange",
+    "bar-purple",
+    "bar-teal"
+];
+
+const currencyFormatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0
+});
+
+function money(value) {
+    return currencyFormatter.format(Number(value) || 0);
+}
+
+function salaryOf(employee) {
+    return Number(employee.salary) || 0;
+}
+
+/* DATE AND TIME */
+
+function updateClock() {
+    const now = new Date();
+
+    document.getElementById("currentDate").textContent =
+        now.toLocaleDateString("en-IN", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+
+    document.getElementById("currentTime").textContent =
+        now.toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+}
+
+updateClock();
+setInterval(updateClock, 60000);
+
+/* DEPARTMENT COUNTS */
+
+function getDepartmentCounts() {
+    const counts = {};
+
+    employees.forEach(employee => {
+        const department =
+            employee.department?.trim() || "Unassigned";
+
+        counts[department] = (counts[department] || 0) + 1;
+    });
+
+    return counts;
+}
+
+/* SUMMARY STATISTICS */
+
+function renderStatistics() {
+    const salaries = employees.map(salaryOf);
+
+    const totalSalary = salaries.reduce(
+        (total, salary) => total + salary,
+        0
+    );
+
+    const average = employees.length
+        ? totalSalary / employees.length
+        : 0;
+
+    const departments = getDepartmentCounts();
+
+    const now = new Date();
+
+    const newHires = employees.filter(employee => {
+        if (!employee.joiningDate) {
+            return false;
+        }
+
+        const date = new Date(
+            employee.joiningDate + "T00:00:00"
+        );
+
+        return !Number.isNaN(date.getTime()) &&
+            date.getMonth() === now.getMonth() &&
+            date.getFullYear() === now.getFullYear();
+    }).length;
+
+    document.getElementById("totalEmployees").textContent =
+        employees.length;
+
+    document.getElementById("totalDepartments").textContent =
+        Object.keys(departments).length;
+
+    document.getElementById("averageSalary").textContent =
+        money(average);
+
+    document.getElementById("newHires").textContent =
+        newHires;
+
+    document.getElementById("highestSalary").textContent =
+        money(salaries.length ? Math.max(...salaries) : 0);
+
+    document.getElementById("lowestSalary").textContent =
+        money(salaries.length ? Math.min(...salaries) : 0);
+
+    document.getElementById("salaryAverage").textContent =
+        money(average);
+}
+
+/* DEPARTMENT CHART */
+
+function renderDepartmentChart() {
+    const chart = document.getElementById("departmentChart");
+    const yAxis = document.getElementById("chartYAxis");
+
+    chart.replaceChildren();
+    yAxis.replaceChildren();
+
+    const departments = Object.entries(getDepartmentCounts());
+
+    if (departments.length === 0) {
+        chart.textContent = "No employee data available.";
+        return;
+    }
+
+    const maxCount = Math.max(
+        ...departments.map(item => item[1]),
+        1
+    );
+
+    const axisMax = Math.max(4, maxCount);
+    const step = Math.ceil(axisMax / 4);
+
+    for (let value = step * 4; value >= 0; value -= step) {
+        const label = document.createElement("span");
+        label.textContent = value;
+        yAxis.appendChild(label);
+    }
+
+    departments.forEach(([name, count], index) => {
+        const column = document.createElement("div");
+        column.className = "bar-column";
+
+        const value = document.createElement("span");
+        value.className = "bar-value";
+        value.textContent = count;
+
+        const bar = document.createElement("div");
+
+        bar.className =
+            "bar " + chartColors[index % chartColors.length];
+
+        bar.style.height =
+            (count / axisMax * 100) + "%";
+
+        const label = document.createElement("span");
+        label.className = "bar-label";
+        label.textContent = name;
+
+        column.append(value, bar, label);
+        chart.appendChild(column);
+    });
+}
+
+/* DEPARTMENT OVERVIEW */
+
+function renderDepartmentOverview() {
+    const container =
+        document.getElementById("departmentOverview");
+
+    const departments = Object.entries(getDepartmentCounts());
+
+    container.replaceChildren();
+
+    if (departments.length === 0) {
+        container.textContent = "No departments available.";
+        return;
+    }
+
+    departments.forEach(([name, count]) => {
+        const row = document.createElement("div");
+        row.className = "department-row";
+
+        const icon = document.createElement("span");
+        icon.className = "department-icon";
+        icon.textContent = departmentIcons[name] || "▦";
+
+        const departmentName = document.createElement("span");
+        departmentName.className = "department-name";
+        departmentName.textContent = name;
+
+        const number = document.createElement("span");
+        number.className = "department-count";
+        number.textContent = count;
+
+        const arrow = document.createElement("span");
+        arrow.className = "department-arrow";
+        arrow.textContent = "›";
+
+        row.append(icon, departmentName, number, arrow);
+
+        container.appendChild(row);
+    });
+}
+
+/* EMPLOYEE TABLE */
+
+function getFilteredEmployees() {
+    const search = document.getElementById("searchInput")
+        .value.trim().toLowerCase();
+
+    return employees.filter(employee => {
+        const text = [
+            employee.id,
+            employee.firstName,
+            employee.lastName,
+            employee.email,
+            employee.department
+        ].map(value => String(value ?? ""))
+         .join(" ")
+         .toLowerCase();
+
+        return text.includes(search);
+    });
+}
+
+function renderEmployeeTable() {
+    const table = document.getElementById("employeeTable");
+    const footer = document.getElementById("tableFooter");
+    const pagination = document.getElementById("pagination");
+
+    const filtered = getFilteredEmployees();
+
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+    currentPage = Math.min(currentPage, totalPages);
+
+    const start = (currentPage - 1) * pageSize;
+    const visible = filtered.slice(start, start + pageSize);
+
+    table.replaceChildren();
+    pagination.replaceChildren();
+
+    if (visible.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 6;
+        cell.className = "empty-message";
+
+        cell.textContent = employees.length
+            ? "No matching employees found."
+            : "No employees found.";
+
+        row.appendChild(cell);
+        table.appendChild(row);
+    }
+
+    visible.forEach(employee => {
+        const row = document.createElement("tr");
+
+        function addCell(value, className) {
+            const cell = document.createElement("td");
+            cell.textContent = value ?? "—";
+
+            if (className) {
+                cell.className = className;
+            }
+
+            row.appendChild(cell);
+            return cell;
+        }
+
+        addCell(employee.id, "employee-id");
+        addCell(employee.firstName);
+        addCell(employee.lastName);
+        addCell(employee.email, "employee-email");
+
+        const departmentCell = document.createElement("td");
+        const badge = document.createElement("span");
+
+        const department = employee.department || "Unassigned";
+
+        const badgeClasses = {
+            "IT": "badge-it",
+            "HR": "badge-hr",
+            "Finance": "badge-finance",
+            "Marketing": "badge-marketing",
+            "Sales": "badge-sales"
+        };
+
+        badge.className =
+            "department-badge " +
+            (badgeClasses[department] || "badge-default");
+
+        badge.textContent = department;
+
+        departmentCell.appendChild(badge);
+        row.appendChild(departmentCell);
+
+        addCell(money(salaryOf(employee)));
+
+        table.appendChild(row);
+    });
+
+    const firstEntry = total === 0 ? 0 : start + 1;
+    const lastEntry = Math.min(start + pageSize, total);
+
+    footer.textContent =
+        `Showing ${firstEntry} to ${lastEntry} of ${total} entries`;
+
+    if (totalPages > 1) {
+        const previous = document.createElement("button");
+        previous.className = "page-button";
+        previous.textContent = "‹";
+        previous.disabled = currentPage === 1;
+
+        previous.addEventListener("click", () => {
+            currentPage--;
+            renderEmployeeTable();
+        });
+
+        pagination.appendChild(previous);
+
+        for (let page = 1; page <= totalPages; page++) {
+            const button = document.createElement("button");
+
+            button.className =
+                "page-button" +
+                (page === currentPage ? " active" : "");
+
+            button.textContent = page;
+
+            button.addEventListener("click", () => {
+                currentPage = page;
+                renderEmployeeTable();
+            });
+
+            pagination.appendChild(button);
+        }
+
+        const next = document.createElement("button");
+        next.className = "page-button";
+        next.textContent = "›";
+        next.disabled = currentPage === totalPages;
+
+        next.addEventListener("click", () => {
+            currentPage++;
+            renderEmployeeTable();
+        });
+
+        pagination.appendChild(next);
+    }
+}
+
+/* LOAD EMPLOYEES FROM SPRING BOOT */
+
+async function loadEmployees() {
+    const button = document.getElementById("refreshButton");
+
+    button.disabled = true;
+    button.textContent = "Loading...";
+
+    try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("API error: " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("Unexpected API response.");
+        }
+
+        employees = data;
+        currentPage = 1;
+
+        renderStatistics();
+        renderDepartmentChart();
+        renderDepartmentOverview();
+        renderEmployeeTable();
+
+    } catch (error) {
+        console.error("Failed to load employees:", error);
+
+        document.getElementById("employeeTable").innerHTML =
+            '<tr><td colspan="6" class="empty-message">' +
+            'Unable to load employees. Make sure Spring Boot is running.' +
+            '</td></tr>';
+
+        document.getElementById("tableFooter").textContent =
+            "Unable to connect to the employee API.";
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "↻  Refresh";
+    }
+}
+
+/* EVENT LISTENERS */
+
+document.getElementById("searchInput").addEventListener(
+    "input",
+    () => {
+        currentPage = 1;
+        renderEmployeeTable();
+    }
+);
+
+document.getElementById("refreshButton").addEventListener(
+    "click",
+    loadEmployees
+);
+
+loadEmployees();
+</script>
+
+</body>
+</html>
